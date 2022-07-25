@@ -1,20 +1,32 @@
+import { useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import Tab from './navigation/Tab';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import AppLoading from 'expo-app-loading';
+import useFonts from './hooks/useFonts';
 
 export default function App() {
+  const [isReady, setIsReady] = useState(false)
+
+  const LoadFonts = async () => {
+    await useFonts();
+  };
+
+  if (!isReady) {
+    return (
+      // El AppLoading está deprecated. hay que cambiarlo porque da error en android
+      <AppLoading
+        startAsync={LoadFonts}
+        onFinish={() => setIsReady(true)}
+        onError={() => { }}
+      />
+    );
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Tab />
+      <StatusBar />
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
